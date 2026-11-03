@@ -30,9 +30,16 @@ jobs:
       uses: actions/upload-artifact@v7.0.2
       with:
         path: dist/
-
+        
+     - name: Generate Docker Tag
+      id: tag
+      run: |
+        echo "IMAGE_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+     
     - name: Build Docker
-      run: docker build -t dbschoolalt/bd-node-ci:$(git rev-parse --short HEAD)
+      run: docker build -t dbschoolalt/bd-node-ci:$IMAGE_TAG
+
+   
 
     - name: Publish Docker
       run: |

@@ -31,7 +31,7 @@ jobs:
       with:
         path: dist/
         
-     - name: Generate Docker Tag
+    - name: Generate Docker Tag
       id: tag
       run: |
         echo "IMAGE_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV

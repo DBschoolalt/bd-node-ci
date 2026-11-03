@@ -43,7 +43,7 @@ jobs:
 
     - name: Publish Docker
       run: |
-        docker login -u dbschoolalt ${{ secrets.DOCKER_HUB_TOKEN }}
+        docker login -u dbschoolalt -p ${{ secrets.DOCKER_HUB_TOKEN }}
         docker push dbschoolalt/bd-node-ci:$(git rev-parse --short HEAD)
 
     - name: Decode SSH key

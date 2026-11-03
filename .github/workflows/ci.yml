@@ -37,7 +37,7 @@ jobs:
         echo "IMAGE_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
      
     - name: Build Docker
-      run: docker build -t dbschoolalt/bd-node-ci:$IMAGE_TAG
+      run: docker build -t dbschoolalt/bd-node-ci:$IMAGE_TAG .
 
    
 

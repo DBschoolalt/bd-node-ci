@@ -36,9 +36,7 @@ jobs:
      
     - name: Build Docker
       run: docker build -t dbschoolalt/bd-node-ci:$IMAGE_TAG .
-
-   
-
+      
     - name: Publish Docker
       run: |
         docker login -u dbschoolalt -p ${{ secrets.DOCKER_HUB_TOKEN }}
@@ -58,11 +56,12 @@ jobs:
 
     - name: Run app on EC2
       run: |
-        ssh -i ec2-key.pem -o StrictHostKeyChecking=no  ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-        curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
-        sudo apt-get install -y nodejs
-        sudo npm install -g pm2
-        cd nodeapp
-        npm install
-        pm2 restart all || pm2 start index.js --name nodeapp
+        ssh -i ec2-key.pem -o StrictHostKeyChecking=no  ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
+        # stop and remove previous containers
+        sudo docker ps --filter "publish=3000" --format "{{.ID}}" | xargs -r sudo docker stop
+        sudo docker rm -f nodeapp || true
+
+        # Pull and run new image
+        sudo docker pull dbschoolalt/bd-node-ci:${IMAGE_TAG}
+        sudo docker run -d --name nodeapp -p 3000:3000 dbschoolalt/bd-node-ci:${IMAGE_TAG} 
         EOF
